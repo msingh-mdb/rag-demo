@@ -19,7 +19,7 @@ Script uses AWS bedrock [titan embedding model v2](https://docs.aws.amazon.com/b
  :file_folder: vector-index : contains vector index for that can be used for Airbnb and mflix <br>
  airbnbSettings.py -- contains pre-configured settings for sample-airbnb dataset (download dataset from above provided link)
  moviesSettings.py -- contains pre-configured settings for sample-mflix dataset (download dataset from above provided link)
- > [!INFO]
+ > [!NOTE]
  > If you plan to use filters, add them to index and update filter_fields array in Settings files listed above
  
  ## Environment variables (.env)
