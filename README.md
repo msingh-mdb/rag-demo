@@ -41,7 +41,7 @@ Script uses AWS bedrock [titan embedding model v2](https://docs.aws.amazon.com/b
 
 ### Question without filters `show me all moveis with train robbery`
 > [!NOTE]
-> Spelled movies incorrectly (highlight is you would like)
+> Spelled movies incorrectly (highlight it you would like)
 <pre>
 Enter questions (Press Ctrl+C to stop):
 Question: show me all moveis with train robbery
