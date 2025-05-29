@@ -11,7 +11,10 @@ vector_index = "pdf_vector"
 vector_field = "embedding"
 
 # Vector Search Result Projection 
-project_results = {"metadata": 1,                
+project_results = {"metadata.page_label": 1,
+                   "metadata.author": 1,
+                   "metadata.title": 1,   
+                   "metadata.source": 1,          
                     "page_content": 1,              
                     "score": {"$meta": "vectorSearchScore"},  
                     "_id": 0 }
