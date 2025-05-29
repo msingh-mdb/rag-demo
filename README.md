@@ -47,9 +47,9 @@ Load dataset into your MongoDB instance
 
 
 # Usage example  
-1. [Movies](#Using-moviesSettings.py-(mflix-sample))
-2. [Airbnb](#Using-airbnbSetting.py-(airbnb-sample))
-3. [10K Filing](#Using-pdfSettings.py-(10K-filing-sample))
+1. [Movies](#using-moviessettings.py-(mflix-sample))
+2. [Airbnb](#using-airbnbsetting.py-(airbnb-sample))
+3. [10K Filing](#using-pdfsettings.py-(10k-filing-sample))
 
 
 # Using moviesSettings.py (mflix sample)
