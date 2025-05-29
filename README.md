@@ -47,12 +47,12 @@ Load dataset into your MongoDB instance
 
 
 # Usage example  
-1. [Movies](##With-moviesSettings.py-(mflix-sample))
-2. [Airbnb](##With-airbnbSetting.py-(airbnb-sample))
-3. [10K Filing](##With-pdfSettings.py-(10K-filing-sample))
+1. [Movies](#Using-moviesSettings.py-(mflix-sample))
+2. [Airbnb](#Using-airbnbSetting.py-(airbnb-sample))
+3. [10K Filing](#Using-pdfSettings.py-(10K-filing-sample))
 
 
-## With moviesSettings.py (mflix sample)
+# Using moviesSettings.py (mflix sample)
 ### Question without filters `show me all moveis with train robbery`
 > [!NOTE]
 > Spelled movies incorrectly (highlight it you would like)
@@ -154,7 +154,7 @@ To fully address the question, more information or a broader set of movie data w
 --------------------------
 </pre>
 
-## With airbnbSetting.py (airbnb sample)
+# Using airbnbSetting.py (airbnb sample)
 
 ### Question without filters `show me all listing in AU that water facing`
 > [!NOTE]
@@ -342,7 +342,7 @@ No further context is needed to answer the question, as the provided information
 --------------------------
 </pre>
  
-## With pdfSettings.py (10K filing sample)
+# Using pdfSettings.py (10K filing sample)
 ### Question specific to JPMC using filters `how are the macro economic conditions impacting banking sector? metadata.author="JPMC"`
 
 <pre>
