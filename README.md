@@ -3,9 +3,16 @@
 This repo is created to with the sole purpose of demoing how mongodB can be used as vector database.
 
 # Use case
-This is preset for mflix and airbnb sample dataset. You can download the dataset with embeddings created from the link below:<br>
-[Sample Collections](https://drive.google.com/file/d/1BKow5HrhxGFGvcbHEqh3FOoYM5noqK1a/view?usp=sharing) 
+There are 3 use case:
+1. Airbnb Listing
+2. mflix movies
+3. 10k Filings for (JPMC and Citi)
 
+Preset dataset for mflix and airbnb can be download from the link below:<br>
+[Airbnb & Mflix Collections](https://drive.google.com/file/d/1BKow5HrhxGFGvcbHEqh3FOoYM5noqK1a/view?usp=sharing) 
+<br>
+10K filing, I have used 2024 filling for both the banks and chunked the data into a collection:
+[10K Collection](https://drive.google.com/file/d/10pi0k-DxVfsycEpxBOeXqyiCzCuK-vvx/view?usp=sharing)
 
 # Embedding Model and LLM used
 Script uses AWS bedrock [titan embedding model v2](https://docs.aws.amazon.com/bedrock/latest/userguide/titan-embedding-models.html) 1024 demensions, and float embeddings. [Claude3 Haiku V1 LLM](https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-runtime_example_bedrock-runtime_Converse_AnthropicClaude_section.html) is used for summarization.
@@ -13,12 +20,14 @@ Script uses AWS bedrock [titan embedding model v2](https://docs.aws.amazon.com/b
 > [!WARNING]
 > Embedding in the database and user question should have same number dimensions (1024 in this case)
 
-
+# Pre-req
+Load dataset into your MongoDB instance
 
 # Directory Structure
  :file_folder: vector-index : contains vector index for that can be used for Airbnb and mflix <br>
  airbnbSettings.py -- contains pre-configured settings for sample-airbnb dataset (download dataset from above provided link)
  moviesSettings.py -- contains pre-configured settings for sample-mflix dataset (download dataset from above provided link)
+ pdfSettings.py -- contains pre-configured settings for 10K filing dataset (download dataset from above provided link)
  > [!NOTE]
  > If you plan to use filters, add them to index and update filter_fields array in Settings files listed above
  
@@ -33,12 +42,17 @@ Script uses AWS bedrock [titan embedding model v2](https://docs.aws.amazon.com/b
 
 `import moviesSettings as settings`  when demostrating movies use case<br>
 `import airbnbSettings as settings`  when demoing airbnb use case<br>
+`import pdfSettings as settings` when demoing 10K filing use case<br>
 **`# comment out the use case you are not working with`**
 
 
 # Usage example  
-## With moviesSettings.py (mflix sample)
+1. [Movies](##With-moviesSettings.py-(mflix-sample))
+2. [Airbnb](##With-airbnbSetting.py-(airbnb-sample))
+3. [10K Filing](##With-pdfSettings.py-(10K-filing-sample))
 
+
+## With moviesSettings.py (mflix sample)
 ### Question without filters `show me all moveis with train robbery`
 > [!NOTE]
 > Spelled movies incorrectly (highlight it you would like)
@@ -104,7 +118,7 @@ Keyboard interrupt received, exiting...
 ### Question without filters `show me all moveis with train robbery runtime=100 year=1970`
 
 > [!NOTE]
-> Coded will work for integer fields only, filters will use $gte (>=) for search
+> Filter does not work well on floating or decimal field type. For numbers it will use $gte (>=).
 <pre>
 Enter questions (Press Ctrl+C to stop):
 Question: show me all moveis with train robbery runtime=100 year=1970
@@ -140,7 +154,6 @@ To fully address the question, more information or a broader set of movie data w
 --------------------------
 </pre>
 
-# Usage example  
 ## With airbnbSetting.py (airbnb sample)
 
 ### Question without filters `show me all listing in AU that water facing`
@@ -272,7 +285,7 @@ No further context is needed to answer the question, as the provided information
 ### Question without filters `show me all listing in AU that water facing sort by price low to high bedrooms=2 bathroom=1`
 
 > [!NOTE]
-> Coded for integer fields only, filters will use $gte (>=) for search
+> Filter does not work well on floating or decimal field type. For numbers it will use $gte (>=).
 
 <pre>
 Question: show me all listing in AU that water facing sort by price low to high bedrooms=2 bathroom=1
@@ -326,5 +339,115 @@ The question asked to show all listings in AU that have a water-facing view, sor
 The results are presented in the order of increasing price, starting from the lowest-priced property ($100 per night) to the highest-priced property ($380 per night). All the properties listed have either a water view or private access to a beach or water body, and meet the criteria of having 2 bedrooms and 1 bathroom.
 
 No further context is needed to answer the question, as the provided information is sufficient to identify the properties that meet the criteria and present them in the requested order.
+--------------------------
+</pre>
+ 
+## With pdfSettings.py (10K filing sample)
+### Question specific to JPMC using filters `how are the macro economic conditions impacting banking sector? metadata.author="JPMC"`
+
+<pre>
+ Enter questions (Press Ctrl+C to stop):
+Question: how are the macro economic conditions impacting banking sector? metadata.author="JPMC"      
+extract_filters completed in 0.0009 seconds.
+clean question: how are the macro economic conditions impacting banking sector? 
+generate_embedding completed in 0.4304 seconds.
+[('metadata.author', 'JPMC')]
+search_similar_documents completed in 0.4059 seconds.
+Number of results from DB: 20
+query_claude completed in 7.3822 seconds.
+--------------------------
+Answer: The provided context discusses how macroeconomic conditions are impacting the banking sector, specifically JPMorgan Chase (JPMC). The key points are:
+
+1. Adverse economic conditions can lead to:
+   - Increase in delinquencies, additions to loan loss allowances, and higher net charge-offs, reducing JPMC's earnings.
+   - Worse impacts in certain geographies with declining industries or high consumer debt levels.
+   - Negative effects on JPMC's consumer businesses from government policies and actions that affect consumers.
+
+2. Unfavorable market and economic conditions can adversely affect JPMC's wholesale businesses:
+   - Reduced transaction volumes and revenue from capital markets activities like loan syndications and securities underwriting.
+   - Losses from having to dispose of credit commitments at a loss or hold larger residual positions.
+   - Diminished fees from managing or holding client assets due to declining asset values.
+
+3. Specific economic changes that can impact JPMC include:
+   - Contraction of available credit and widening of credit spreads.
+   - Currency fluctuations, reduced investments, and disruptions to supply chains.
+   - Geopolitical challenges in regions like Russia, the Middle East, and China.
+
+4. JPMC's consumer businesses can be negatively affected by factors like:
+   - Personal and household income distribution, unemployment, interest rate changes, and changes in the value of collateral.
+   - Reductions in consumer and small business confidence, and changes in consumer spending and debt levels.
+
+5. JPMC's wholesale clients in certain sectors, like commercial real estate, can be impacted by economic downturns, leading to increased credit losses for JPMC.
+
+In conclusion, the context indicates that adverse macroeconomic conditions, such as economic downturns, rising interest rates, and geopolitical instability, can have a significant negative impact on the banking sector, particularly on JPMC's consumer and wholesale businesses, leading to increased credit losses, reduced revenues, and pressure on profitability.
+</pre>
+
+
+### Question specific to Citi using filters `how are the macro economic conditions impacting banking sector? metadata.author="Citigroup"`
+
+<pre>
+ Question: how are the macro economic conditions impacting banking sector? metadata.author="Citigroup" 
+extract_filters completed in 0.0002 seconds.
+clean question: how are the macro economic conditions impacting banking sector? 
+generate_embedding completed in 0.1219 seconds.
+[('metadata.author', 'Citigroup')]
+search_similar_documents completed in 0.1753 seconds.
+Number of results from DB: 20
+query_claude completed in 8.5203 seconds.
+--------------------------
+Answer: The context provided discusses how macroeconomic conditions are impacting the banking sector, specifically Citigroup (Citi). The key points are:
+
+1. Macroeconomic Conditions:
+   - Under Citi's base macroeconomic forecast, U.S. real GDP growth is expected to slow during 2025 and 2026, while the unemployment rate is expected to increase in 2025 but decline in 2026.
+   - Citi's downside scenario assumes a recession, including an elevated average U.S. unemployment rate of 6.8% over the eight-quarter forecast period, with a peak difference of 3.4% compared to the base scenario.
+
+2. Allowance for Credit Losses (ACL):
+   - Citi's ACL is estimated using three probability-weighted macroeconomic scenarios - base, upside, and downside.
+   - The ACL is sensitive to changes in the macroeconomic variables, especially the U.S. unemployment rate and real GDP growth.
+   - Citi's downside scenario has more adverse macroeconomic assumptions than the base scenario, which would result in a higher ACL.
+
+3. Impact on Citi's Businesses:
+   - Higher inflation, interest rate changes, and other macroeconomic factors could negatively impact Citi's consumer and institutional clients, businesses, cost of credit, and overall results of operations.
+   - Citi's net interest income could be adversely affected by a decline in interest rates or a flattening or inversion of the yield curve.
+
+4. Sensitivity Analysis:
+   - If Citi applied its downside scenario with more adverse macroeconomic assumptions, it would result in a significant increase in the ACL compared to the base scenario.
+   - Citi's ACL is also impacted by qualitative factors, such as transfer risk associated with exposures outside the U.S. and potential impacts on vulnerable industries and regions.
+
+In conclusion, the context indicates that adverse macroeconomic conditions, such as economic slowdowns, rising unemployment, and changes in interest rates, can have a significant negative impact on the banking sector, particularly on Citi's allowance for credit losses, net interest income, and overall financial performance.
+--------------------------
+</pre>
+
+
+### Question that is not specific (no filters) `how are the macro economic conditions impacting banking sector? generate answer for each metadata.author value`
+
+> [!IMPORTANT]
+> Claude (LLM) will summarize findings bases on context provided for each metadata.author
+
+<pre>
+Question: how are the macro economic conditions impacting banking sector? generate answer for each metadata.author value
+extract_filters completed in 0.0001 seconds.
+clean question: how are the macro economic conditions impacting banking sector? generate answer for each metadata.author value
+generate_embedding completed in 0.1704 seconds.
+search_similar_documents completed in 0.2587 seconds.
+Number of results from DB: 20
+query_claude completed in 8.9592 seconds.
+--------------------------
+Answer: JPMorgan Chase (JPMC):
+- Adverse economic conditions can lead to increased delinquencies, higher allowance for credit losses, and higher net charge-offs, reducing JPMC's earnings. This can be worse in certain geographies with high unemployment or consumer debt.
+- JPMC's consumer businesses can be negatively affected by government policies and actions that impact consumers, such as changes to medical insurance, education, or financial services regulations.
+- Unfavorable market and economic conditions can negatively impact JPMC's wholesale businesses by reducing transaction volumes and revenue from capital markets activities.
+- Macroeconomic factors like credit contraction, currency fluctuations, and geopolitical events can cause JPMC to suffer losses, reduce its liquidity and capital levels, and hamper its ability to serve clients.
+- JPMC's consumer businesses can be negatively affected by factors like unemployment, inflation, and changes in consumer spending and debt levels.
+- Adverse economic conditions affecting specific sectors or regions can lead to increased credit losses for JPMC's clients in those areas.
+
+Citigroup (Citi):
+- Citi's base macroeconomic forecast expects U.S. real GDP growth to slow and unemployment to increase in 2025, then improve in 2026.
+- Citi's downside scenario assumes a recession, with a higher average unemployment rate and GDP contraction.
+- Citi's allowance for credit losses (ACL) is sensitive to macroeconomic scenarios, with the downside scenario resulting in a significantly higher ACL.
+- Macroeconomic factors like inflation, interest rate changes, and geopolitical uncertainties could negatively impact Citi's businesses, cost of credit, and overall results.
+- Citi's net interest income could be adversely affected by declining interest rates or a flattening/inverting yield curve.
+
+In summary, the context indicates that adverse macroeconomic conditions, such as economic downturns, rising unemployment, changing interest rates, and geopolitical instability, can have a significant negative impact on the banking sector, affecting factors like credit quality, revenue, and profitability for both JPMC and Citi. The banks' allowances for credit losses are particularly sensitive to macroeconomic forecasts.
 --------------------------
 </pre>
