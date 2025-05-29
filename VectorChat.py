@@ -4,6 +4,7 @@ Comment out one of the below
 '''
 #import moviesSettings as settings
 import airbnbSettings as settings
+#import pdfSettings as settings
 
 
 ###########################
@@ -205,9 +206,9 @@ class QueryProcessor:
 
         # Define the regular expression pattern to capture both quoted strings and unquoted values
         # "([^"]+)" - Quoted text/numbers \d+(?:\.\d+ - int/float \w+ unquoted text (3 patterns) 
-        pattern = r'(\w+)=(?:"([^"]+)"|(\d+(?:\.\d+)?)|(\w+))'
+        pattern = r'([\w.]+)=(?:"([^"]+)"|(\d+(?:\.\d+)?)|(\w+))'
         # Remove filters from the question 
-        cleanthis = r'(\w+)=(?:"([^"]+)"\s?|(\d+(?:\.\d+)\s?)|(\w+)\s?)'
+        cleanthis = r'([\w.]+)=(?:"([^"]+)"\s?|(\d+(?:\.\d+)\s?)|(\w+)\s?)'
         q1 = re.sub(cleanthis, '', question)
 
         # Find all matches for the pattern in the text
